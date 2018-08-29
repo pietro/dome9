@@ -2,6 +2,8 @@
 
 Dome9 is a Go client library for accessing the Dome9 V2 API.
 
+You can view the client API docs here: [http://godoc.org/github.com/pietro/dome9](http://godoc.org/github.com/pietro/dome9).
+
 You can view dome9 API docs here: [https://api-v2-docs.dome9.com/](https://api-v2-docs.dome9.com/).
 
 ## This is a work in progress in its initial stages.

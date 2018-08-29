@@ -37,7 +37,7 @@ func TestAzureCloudAccounts_ListAzureCloudAccounts(t *testing.T) {
 		t.Errorf("AzureCloudAccounts.List returned error: %v", err)
 	}
 
-	expected := []AzureCloudAccount{{Id: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionId: "string", TenantId: "string", Credentials: &AzureAccountCredentials{ClientId: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}}
+	expected := []AzureCloudAccount{{ID: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionID: "string", TenantID: "string", Credentials: &AzureAccountCredentials{ClientID: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}}
 
 	if !reflect.DeepEqual(azureAccounts, expected) {
 		t.Errorf("AzureCloudAccounts.List\n got=%#v\nwant=%#v", azureAccounts, expected)
@@ -69,7 +69,7 @@ func TestAzureCloudAccounts_CreateAzureCloudAccount(t *testing.T) {
 		fmt.Fprint(w, `{}`)
 	})
 
-	azureAccount := AzureCloudAccount{Id: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionId: "string", TenantId: "string", Credentials: &AzureAccountCredentials{ClientId: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
+	azureAccount := AzureCloudAccount{ID: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionID: "string", TenantID: "string", Credentials: &AzureAccountCredentials{ClientID: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
 
 	_, err := client.AzureCloudAccounts.Create(azureAccount)
 	if err != nil {
@@ -194,7 +194,7 @@ func TestAzureCloudAccounts_UpdateOperationMode(t *testing.T) {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}
 
-	expected := &AzureCloudAccount{Id: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionId: "string", TenantId: "string", Credentials: &AzureAccountCredentials{ClientId: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
+	expected := &AzureCloudAccount{ID: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionID: "string", TenantID: "string", Credentials: &AzureAccountCredentials{ClientID: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
 
 	if !reflect.DeepEqual(azureAccount, expected) {
 		t.Errorf("AzureCloudAccounts.List\n got=%#v\nwant=%#v", azureAccount, expected)
@@ -228,7 +228,7 @@ func TestAzureCloudAccounts_UpdateAccountName(t *testing.T) {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}
 
-	expected := &AzureCloudAccount{Id: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionId: "string", TenantId: "string", Credentials: &AzureAccountCredentials{ClientId: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
+	expected := &AzureCloudAccount{ID: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionID: "string", TenantID: "string", Credentials: &AzureAccountCredentials{ClientID: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
 
 	if !reflect.DeepEqual(azureAccount, expected) {
 		t.Errorf("AzureCloudAccounts.List\n got=%#v\nwant=%#v", azureAccount, expected)

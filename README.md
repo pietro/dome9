@@ -1,5 +1,7 @@
 # Dome9 [![Build Status](https://travis-ci.org/pietro/dome9.svg?branch=master)](https://travis-ci.org/pietro/dome9)[![Coverage Status](https://coveralls.io/repos/github/pietro/dome9/badge.svg?branch=master)](https://coveralls.io/github/pietro/dome9?branch=master)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/pietro/dome9)](https://goreportcard.com/report/github.com/pietro/dome9)
+
 Dome9 is a Go client library for accessing the Dome9 V2 API.
 
 You can view the client API docs here: [http://godoc.org/github.com/pietro/dome9](http://godoc.org/github.com/pietro/dome9).

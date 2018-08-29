@@ -32,4 +32,4 @@ before_install:
 
 script:
   - 'if [ "${JOB}" = "test" ]; then go test -v ./...; fi'
-  - 'if [ "${JOB}" = "test" ]; then $GOPATH/bin/goveralls -service=travis-ci; fi'
+  - 'if [ "${JOB}" = "coverage" ]; then $GOPATH/bin/goveralls -service=travis-ci; fi'

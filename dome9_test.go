@@ -95,7 +95,7 @@ func TestNewClientWithoutCredentials(t *testing.T) {
 
 func TestNewRequest_badURL(t *testing.T) {
 	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
-	c,  _ := NewClient(nil, creds)
+	c, _ := NewClient(nil, creds)
 	_, err := c.NewRequest(http.MethodGet, ":", nil)
 	testURLParseError(t, err)
 }

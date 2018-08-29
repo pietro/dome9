@@ -31,20 +31,20 @@ var _ AzureCloudAccountsService = &AzureCloudAccountsServiceOp{}
 
 // AzureAccountCredentials are the credentials used to access an Azure account.
 type AzureAccountCredentials struct {
-	ClientId string `json:"clientId,omitempty"`
+	ClientId       string `json:"clientId,omitempty"`
 	ClientPassword string `json:"clientPassword,omitempty"`
 }
 
 // AzureCloudAccount are the details of an Azure account.
 type AzureCloudAccount struct {
-	Id string `json:"id"`
-	Name string `json:"name"`
-	SubscriptionId string `json:"subscriptionId"`
-	TenantId string `json:"tenantID"`
-	Credentials *AzureAccountCredentials `json:"credentials"`
-	OperationMode string `json:"operationMode"`
-	Error string `json:error"`
-	CreationDate string `json:creationDate"`
+	Id             string                   `json:"id"`
+	Name           string                   `json:"name"`
+	SubscriptionId string                   `json:"subscriptionId"`
+	TenantId       string                   `json:"tenantID"`
+	Credentials    *AzureAccountCredentials `json:"credentials"`
+	OperationMode  string                   `json:"operationMode"`
+	Error          string                   `json:error"`
+	CreationDate   string                   `json:creationDate"`
 }
 
 // Operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage.
@@ -60,7 +60,6 @@ type AzureAccountNameMode struct {
 type azureCloudAccountsRoot []AzureCloudAccount
 
 type missingPermissionRoot []MissingPermission
-
 
 // List all AzureCloudAccounts.
 func (s *AzureCloudAccountsServiceOp) List() ([]AzureCloudAccount, *http.Response, error) {
@@ -146,35 +145,35 @@ func (s *AzureCloudAccountsServiceOp) GetMissingPermissions(accountId string) (*
 
 // Get a list of missing permissions for a specific cloud entity type and Azure cloud account
 func (s *AzureCloudAccountsServiceOp) GetMissingPermissionsByEntityType(accountId, entityType, subType string) ([]MissingPermission, *http.Response, error) {
- 	path := fmt.Sprintf("%s/%s/MissingPermissions?entityType=%s&subType=%s", azureCloudAccountBasePath, accountId, entityType, subType)
+	path := fmt.Sprintf("%s/%s/MissingPermissions?entityType=%s&subType=%s", azureCloudAccountBasePath, accountId, entityType, subType)
 
 	req, err := s.client.NewRequest(http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
- 	missingPerms := new(missingPermissionRoot)
- 	resp, err := s.client.Do(req, &missingPerms)
- 	if err != nil {
- 		return nil, resp, err
- 	}
+	missingPerms := new(missingPermissionRoot)
+	resp, err := s.client.Do(req, &missingPerms)
+	if err != nil {
+		return nil, resp, err
+	}
 
 	return *missingPerms, resp, err
 }
 
 // Reset (re-validate) the missing permissions indication for an Azure account in Dome9
 func (s *AzureCloudAccountsServiceOp) ResetMissingPermissions(accountId string) (*http.Response, error) {
- 	path := fmt.Sprintf("%s/%s/MissingPermissions/Reset", azureCloudAccountBasePath, accountId)
+	path := fmt.Sprintf("%s/%s/MissingPermissions/Reset", azureCloudAccountBasePath, accountId)
 
 	req, err := s.client.NewRequest(http.MethodPut, path, nil)
 	if err != nil {
 		return nil, err
 	}
 
- 	resp, err := s.client.Do(req, nil)
- 	if err != nil {
- 		return resp, err
- 	}
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
 
 	// ResetMissingPermissions returns a 204 No Content.
 	// Error on anything else.

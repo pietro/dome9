@@ -28,7 +28,7 @@ type Credentials struct {
 // Client for Dome9 v2 API.
 type Client struct {
 	// API Credentials.
-	Credentials * Credentials
+	Credentials *Credentials
 
 	// HTTP client.
 	client *http.Client

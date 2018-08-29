@@ -43,8 +43,8 @@ type AzureCloudAccount struct {
 	TenantId       string                   `json:"tenantID"`
 	Credentials    *AzureAccountCredentials `json:"credentials"`
 	OperationMode  string                   `json:"operationMode"`
-	Error          string                   `json:error"`
-	CreationDate   string                   `json:creationDate"`
+	Error          string                   `json:"error"`
+	CreationDate   string                   `json:"creationDate"`
 }
 
 // Operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage.

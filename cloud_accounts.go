@@ -21,7 +21,7 @@ type CloudAccountActionFailure struct {
 type MissingPermission struct {
 	Srl               string                     `json:"srl"`
 	ConsecutiveFails  int32                      `json:"consecutiveFails"`
-	LastFail          string                     `json:""lastFail`
+	LastFail          string                     `json:"lastFail"`
 	LastSuccess       string                     `json:"lastSuccess"`
 	FirstFail         string                     `json:"firstFail"`
 	LastFailErrorCode string                     `json:"lastFailErrorCode"`

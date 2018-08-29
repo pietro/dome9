@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-const testAccountId = "1337-acct"
+const testAccountID = "1337-acct"
 
 func TestAzureCloudAccounts_ListAzureCloudAccounts(t *testing.T) {
 	setup()
@@ -48,12 +48,12 @@ func TestAzureCloudAccounts_DeleteAzureCloudAccount(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountId, func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountID, func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodDelete)
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	_, err := client.AzureCloudAccounts.Delete(testAccountId)
+	_, err := client.AzureCloudAccounts.Delete(testAccountID)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.Delete returned error: %v", err)
 	}
@@ -104,7 +104,7 @@ func TestAzureCloudAccounts_GetAzureCloudAccountsMissingPermissions(t *testing.T
 		t.Errorf("AzureCloudAccounts.GetMissingPermissions returned error: %v", err)
 	}
 
-	expected := &CloudAccountMissingPermissions{Id: "00000000-0000-0000-0000-000000000000", Actions: []CloudAccountExternalActionStatus{{Type: "string", SubType: "string", Total: 0, Error: &CloudAccountActionFailure{Code: "string", Message: "string"}}}}
+	expected := &CloudAccountMissingPermissions{ID: "00000000-0000-0000-0000-000000000000", Actions: []CloudAccountExternalActionStatus{{Type: "string", SubType: "string", Total: 0, Error: &CloudAccountActionFailure{Code: "string", Message: "string"}}}}
 
 	if !reflect.DeepEqual(missingPerms, expected) {
 		t.Errorf("AzureCloudAccounts.GetMissingPermissions\n got=%#v\nwant=%#v", missingPerms, expected)
@@ -145,7 +145,7 @@ func TestAzureCloudAccounts_GetAzureCloudAccountsMissingPermissionsByEntityType(
 		t.Errorf("AzureCloudAccounts.GetMissingPermissionsByEntityType returned error: %v", err)
 	}
 
-	expected := []MissingPermission{{Srl: "string", ConsecutiveFails: 0, LastFail: "2018-08-26T16:11:12Z", LastSuccess: "2018-08-26T16:11:12Z", FirstFail: "2018-08-26T16:11:12Z", LastFailErrorCode: "string", LastFailMessage: "string", Id: "00000000-0000-0000-0000-000000000000", RetryMetadata: &MissingPermissionMetadata{Permissions: []string{"string"}, EntityType: "string", SubType: "string"}, CloudAccountId: "00000000-0000-0000-0000-000000000000", Vendor: "aws"}}
+	expected := []MissingPermission{{Srl: "string", ConsecutiveFails: 0, LastFail: "2018-08-26T16:11:12Z", LastSuccess: "2018-08-26T16:11:12Z", FirstFail: "2018-08-26T16:11:12Z", LastFailErrorCode: "string", LastFailMessage: "string", ID: "00000000-0000-0000-0000-000000000000", RetryMetadata: &MissingPermissionMetadata{Permissions: []string{"string"}, EntityType: "string", SubType: "string"}, CloudAccountID: "00000000-0000-0000-0000-000000000000", Vendor: "aws"}}
 
 	if !reflect.DeepEqual(missingPerms, expected) {
 		t.Errorf("AzureCloudAccounts.GetMissingPermissionsByEntityType\n got=%#v\nwant=%#v", missingPerms, expected)
@@ -156,12 +156,12 @@ func TestAzureCloudAccounts_ResetMissingPermissions(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountId+"/MissingPermissions/Reset", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountID+"/MissingPermissions/Reset", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodPut)
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	_, err := client.AzureCloudAccounts.ResetMissingPermissions(testAccountId)
+	_, err := client.AzureCloudAccounts.ResetMissingPermissions(testAccountID)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.ResetMissingPermissions returned error: %v", err)
 	}
@@ -171,7 +171,7 @@ func TestAzureCloudAccounts_UpdateOperationMode(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountId+"/OperationMode", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountID+"/OperationMode", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodPut)
 		fmt.Fprint(w, `{
     "id": "00000000-0000-0000-0000-000000000000",
@@ -189,7 +189,7 @@ func TestAzureCloudAccounts_UpdateOperationMode(t *testing.T) {
 	})
 
 	opMode := AzureAccountOperationMode{OperationMode: "Read"}
-	azureAccount, _, err := client.AzureCloudAccounts.UpdateOperationMode(testAccountId, opMode)
+	azureAccount, _, err := client.AzureCloudAccounts.UpdateOperationMode(testAccountID, opMode)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}
@@ -205,7 +205,7 @@ func TestAzureCloudAccounts_UpdateAccountName(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountId+"/AccountName", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/AzureCloudAccount/"+testAccountID+"/AccountName", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodPut)
 		fmt.Fprint(w, `{
     "id": "00000000-0000-0000-0000-000000000000",
@@ -223,7 +223,7 @@ func TestAzureCloudAccounts_UpdateAccountName(t *testing.T) {
 	})
 
 	acctName := AzureAccountNameMode{Name: "foobared"}
-	azureAccount, _, err := client.AzureCloudAccounts.UpdateAccountName(testAccountId, acctName)
+	azureAccount, _, err := client.AzureCloudAccounts.UpdateAccountName(testAccountID, acctName)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}

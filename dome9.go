@@ -19,7 +19,7 @@ const (
 // Credentials for Dome9 API.
 type Credentials struct {
 	// API key.
-	KeyId string
+	KeyID string
 
 	// API secret.
 	KeySecret string
@@ -50,7 +50,7 @@ func NewClient(httpClient *http.Client, credentials *Credentials) (*Client, erro
 	}
 
 	if credentials == nil {
-		return nil, fmt.Errorf("Credentials must be provided.")
+		return nil, fmt.Errorf("Credentials must be provided")
 	}
 
 	baseURL, err := url.Parse(defaultBaseURL)
@@ -126,7 +126,7 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 		return nil, err
 	}
 
-	req.SetBasicAuth(c.Credentials.KeyId, c.Credentials.KeySecret)
+	req.SetBasicAuth(c.Credentials.KeyID, c.Credentials.KeySecret)
 
 	req.Header.Add("Content-Type", mediaType)
 	req.Header.Add("Accept", mediaType)

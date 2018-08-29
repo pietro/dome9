@@ -31,28 +31,28 @@ var _ AzureCloudAccountsService = &AzureCloudAccountsServiceOp{}
 
 // AzureAccountCredentials are the credentials used to access an Azure account.
 type AzureAccountCredentials struct {
-	ClientId       string `json:"clientId,omitempty"`
+	ClientID       string `json:"clientId,omitempty"`
 	ClientPassword string `json:"clientPassword,omitempty"`
 }
 
 // AzureCloudAccount are the details of an Azure account.
 type AzureCloudAccount struct {
-	Id             string                   `json:"id"`
+	ID             string                   `json:"id"`
 	Name           string                   `json:"name"`
-	SubscriptionId string                   `json:"subscriptionId"`
-	TenantId       string                   `json:"tenantID"`
+	SubscriptionID string                   `json:"subscriptionId"`
+	TenantID       string                   `json:"tenantID"`
 	Credentials    *AzureAccountCredentials `json:"credentials"`
 	OperationMode  string                   `json:"operationMode"`
 	Error          string                   `json:"error"`
 	CreationDate   string                   `json:"creationDate"`
 }
 
-// Operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage.
+// AzureAccountOperationMode is the operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage.
 type AzureAccountOperationMode struct {
 	OperationMode string `json:"operationMode"`
 }
 
-// JSON used to update an Azure Account Name.
+// AzureAccountNameMode is used to create the JSON object to update an Azure Account Name.
 type AzureAccountNameMode struct {
 	Name string `json:"name"`
 }
@@ -79,9 +79,9 @@ func (s *AzureCloudAccountsServiceOp) List() ([]AzureCloudAccount, *http.Respons
 	return *azureAccounts, resp, err
 }
 
-// Delete an Azure account from a Dome9 account (the Azure account is not deleted from Azure)
-func (s *AzureCloudAccountsServiceOp) Delete(accountId string) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s", azureCloudAccountBasePath, accountId)
+// Delete an Azure account from a Dome9 account (the Azure account is not deleted from Azure).
+func (s *AzureCloudAccountsServiceOp) Delete(accountID string) (*http.Response, error) {
+	path := fmt.Sprintf("%s/%s", azureCloudAccountBasePath, accountID)
 
 	req, err := s.client.NewRequest(http.MethodDelete, path, nil)
 	if err != nil {
@@ -96,13 +96,13 @@ func (s *AzureCloudAccountsServiceOp) Delete(accountId string) (*http.Response, 
 	// Delete returns a 204 No Content.
 	// Error on anything else.
 	if resp.StatusCode != 204 {
-		return resp, fmt.Errorf("Expected Status Code 204. Got: %v.", resp.StatusCode)
+		return resp, fmt.Errorf("Expected Status Code 204. Got: %v", resp.StatusCode)
 	}
 
 	return resp, err
 }
 
-// Add (onboard) an Azure account to the user's Dome9 account
+// Create (onboard) an Azure account to the user's Dome9 account.
 func (s *AzureCloudAccountsServiceOp) Create(azureAccount AzureCloudAccount) (*http.Response, error) {
 	path := azureCloudAccountBasePath
 
@@ -119,15 +119,15 @@ func (s *AzureCloudAccountsServiceOp) Create(azureAccount AzureCloudAccount) (*h
 	// Create returns a 200 with empty body.
 	// Error on anything else.
 	if resp.StatusCode != 200 {
-		return resp, fmt.Errorf("Expected Status Code 200. Got: %v.", resp.StatusCode)
+		return resp, fmt.Errorf("Expected Status Code 200. Got: %v", resp.StatusCode)
 	}
 
 	return resp, err
 }
 
-// Get a list of missing permissions for an Azure account in a Dome9 account.
-func (s *AzureCloudAccountsServiceOp) GetMissingPermissions(accountId string) (*CloudAccountMissingPermissions, *http.Response, error) {
-	path := fmt.Sprintf("%s/%s/MissingPermissions", azureCloudAccountBasePath, accountId)
+// GetMissingPermissions lists missing permissions for an Azure account in a Dome9 account.
+func (s *AzureCloudAccountsServiceOp) GetMissingPermissions(accountID string) (*CloudAccountMissingPermissions, *http.Response, error) {
+	path := fmt.Sprintf("%s/%s/MissingPermissions", azureCloudAccountBasePath, accountID)
 
 	req, err := s.client.NewRequest(http.MethodGet, path, nil)
 	if err != nil {
@@ -143,9 +143,9 @@ func (s *AzureCloudAccountsServiceOp) GetMissingPermissions(accountId string) (*
 	return missingPerms, resp, err
 }
 
-// Get a list of missing permissions for a specific cloud entity type and Azure cloud account
-func (s *AzureCloudAccountsServiceOp) GetMissingPermissionsByEntityType(accountId, entityType, subType string) ([]MissingPermission, *http.Response, error) {
-	path := fmt.Sprintf("%s/%s/MissingPermissions?entityType=%s&subType=%s", azureCloudAccountBasePath, accountId, entityType, subType)
+// GetMissingPermissionsByEntityType lists missing permissions for a specific cloud entity type and Azure cloud account.
+func (s *AzureCloudAccountsServiceOp) GetMissingPermissionsByEntityType(accountID, entityType, subType string) ([]MissingPermission, *http.Response, error) {
+	path := fmt.Sprintf("%s/%s/MissingPermissions?entityType=%s&subType=%s", azureCloudAccountBasePath, accountID, entityType, subType)
 
 	req, err := s.client.NewRequest(http.MethodGet, path, nil)
 	if err != nil {
@@ -161,9 +161,9 @@ func (s *AzureCloudAccountsServiceOp) GetMissingPermissionsByEntityType(accountI
 	return *missingPerms, resp, err
 }
 
-// Reset (re-validate) the missing permissions indication for an Azure account in Dome9
-func (s *AzureCloudAccountsServiceOp) ResetMissingPermissions(accountId string) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s/MissingPermissions/Reset", azureCloudAccountBasePath, accountId)
+// ResetMissingPermissions resets (re-validate) the missing permissions indication for an Azure account in Dome9.
+func (s *AzureCloudAccountsServiceOp) ResetMissingPermissions(accountID string) (*http.Response, error) {
+	path := fmt.Sprintf("%s/%s/MissingPermissions/Reset", azureCloudAccountBasePath, accountID)
 
 	req, err := s.client.NewRequest(http.MethodPut, path, nil)
 	if err != nil {
@@ -178,14 +178,14 @@ func (s *AzureCloudAccountsServiceOp) ResetMissingPermissions(accountId string) 
 	// ResetMissingPermissions returns a 204 No Content.
 	// Error on anything else.
 	if resp.StatusCode != 204 {
-		return resp, fmt.Errorf("Expected Status Code 204. Got: %v.", resp.StatusCode)
+		return resp, fmt.Errorf("Expected Status Code 204. Got: %v", resp.StatusCode)
 	}
 	return resp, err
 }
 
-// Update the operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage
-func (s *AzureCloudAccountsServiceOp) UpdateOperationMode(accountId string, operationMode AzureAccountOperationMode) (*AzureCloudAccount, *http.Response, error) {
-	path := fmt.Sprintf("%s/%s/OperationMode", azureCloudAccountBasePath, accountId)
+// UpdateOperationMode changes the operations mode for an Azure account in Dome9. Modes can be Read-Only or Manage.
+func (s *AzureCloudAccountsServiceOp) UpdateOperationMode(accountID string, operationMode AzureAccountOperationMode) (*AzureCloudAccount, *http.Response, error) {
+	path := fmt.Sprintf("%s/%s/OperationMode", azureCloudAccountBasePath, accountID)
 
 	req, err := s.client.NewRequest(http.MethodPut, path, operationMode)
 	if err != nil {
@@ -201,9 +201,9 @@ func (s *AzureCloudAccountsServiceOp) UpdateOperationMode(accountId string, oper
 	return azureAccount, resp, err
 }
 
-// Update the account name (in Dome9) for an Azure account
-func (s *AzureCloudAccountsServiceOp) UpdateAccountName(accountId string, accountName AzureAccountNameMode) (*AzureCloudAccount, *http.Response, error) {
-	path := fmt.Sprintf("%s/%s/AccountName", azureCloudAccountBasePath, accountId)
+// UpdateAccountName changes the account name (in Dome9) for an Azure account.
+func (s *AzureCloudAccountsServiceOp) UpdateAccountName(accountID string, accountName AzureAccountNameMode) (*AzureCloudAccount, *http.Response, error) {
+	path := fmt.Sprintf("%s/%s/AccountName", azureCloudAccountBasePath, accountID)
 
 	req, err := s.client.NewRequest(http.MethodPut, path, accountName)
 	if err != nil {

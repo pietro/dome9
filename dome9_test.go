@@ -25,7 +25,7 @@ func setup() {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	client, _ = NewClient(nil, creds)
 	url, _ := url.Parse(server.URL)
 	client.BaseURL = url
@@ -70,13 +70,13 @@ func testClientDefaults(t *testing.T, c *Client) {
 }
 
 func TestNewClient(t *testing.T) {
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, _ := NewClient(nil, creds)
 	testClientDefaults(t, c)
 }
 
 func TestNew(t *testing.T) {
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds)
 
 	if err != nil {
@@ -94,7 +94,7 @@ func TestNewClientWithoutCredentials(t *testing.T) {
 }
 
 func TestNewRequest_badURL(t *testing.T) {
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, _ := NewClient(nil, creds)
 	_, err := c.NewRequest(http.MethodGet, ":", nil)
 	testURLParseError(t, err)
@@ -102,7 +102,7 @@ func TestNewRequest_badURL(t *testing.T) {
 
 func TestNewRequest_withCustomUserAgent(t *testing.T) {
 	ua := "testing/0.0.1"
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetUserAgent(ua))
 
 	if err != nil {
@@ -213,7 +213,7 @@ func TestCheckResponse_noBody(t *testing.T) {
 
 func TestCustomUserAgent(t *testing.T) {
 	ua := "testing/0.0.1"
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetUserAgent(ua))
 
 	if err != nil {
@@ -228,7 +228,7 @@ func TestCustomUserAgent(t *testing.T) {
 
 func TestCustomBaseURL(t *testing.T) {
 	baseURL := "http://localhost/foo"
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetBaseURL(baseURL))
 
 	if err != nil {
@@ -243,7 +243,7 @@ func TestCustomBaseURL(t *testing.T) {
 
 func TestCustomBaseURL_badURL(t *testing.T) {
 	baseURL := ":"
-	creds = &Credentials{KeyId: "foo", KeySecret: "bar"}
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	_, err := New(nil, creds, SetBaseURL(baseURL))
 
 	testURLParseError(t, err)

@@ -6,3 +6,30 @@ go:
   - 1.10.x
   - 1.11.x
   - master
+
+env:
+  matrix:
+    - JOB=test
+    - JOB=coverage
+
+jobs:
+  fast_finish: true
+
+  allow_failures:
+    - go: master
+
+  exclude:
+    - go: 1.10.x
+      env: JOB=coverage
+    - go: master
+      env: JOB=coverage
+
+notifications:
+  email: false
+
+before_install:
+  - go get github.com/mattn/goveralls
+
+script:
+  - 'if [ "${JOB}" = "test" ]; then go test -v ./...; fi'
+  - 'if [ "${JOB}" = "test" ]; then $GOPATH/bin/goveralls -service=travis-ci; fi'

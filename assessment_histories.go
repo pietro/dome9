@@ -15,6 +15,8 @@ const assessmentHistoriesBasePath = "v2/AssessmentHistoryV2"
 // See: https://api-v2-docs.dome9.com/#Dome9-API-AssessmentHistoryV2
 type AssessmentHistoriesService interface {
 	GetBundleResults(bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) (*AssessmentHistoryResult, *http.Response, error)
+	GetAssessmentResult(assessmentID string) (*AssessmentHistoryResult, *http.Response, error)
+	DeleteAssessmentResult(assessmentID string) (*http.Response, error)
 }
 
 // AssessmentHistoriesServiceOp handles communication with the AssessmentHistories
@@ -56,13 +58,13 @@ type AssessmentHistoryBundleResult struct {
 	Description            string               `json:"description"`
 	CFT                    AssessmentCFTRequest `json:"cft"`
 	IsCFT                  bool                 `json:"isCft"`
-	Dome9CloudAccountId    string               `json:"dome9CloudAccountId"`
-	ExternalCloudAccountId string               `json:"externalCloudAccountId"`
-	CloudAccountId         string               `json:"cloudAccountId"`
+	Dome9CloudAccountID    string               `json:"dome9CloudAccountId"`
+	ExternalCloudAccountID string               `json:"externalCloudAccountId"`
+	CloudAccountID         string               `json:"cloudAccountId"`
 	Region                 string               `json:"region"`
 	CloudNetwork           string               `json:"cloudNetwork"`
 	CloudAccountType       string               `json:"cloudAccountType"`
-	RequestId              string               `json:"requestId"`
+	RequestID              string               `json:"requestId"`
 }
 
 // GetBundleResults
@@ -83,4 +85,45 @@ func (s *AssessmentHistoriesServiceOp) GetBundleResults(bundleID, cloudAccountID
 	}
 
 	return assessmentHistoryResult, resp, err
+}
+
+// GetAssessmentResult
+func (s *AssessmentHistoriesServiceOp) GetAssessmentResult(assessmentID string) (*AssessmentHistoryResult, *http.Response, error) {
+	path := fmt.Sprintf("%s/%s", assessmentHistoriesBasePath, assessmentID)
+
+	req, err := s.client.NewRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	assessmentHistoryResult := new(AssessmentHistoryResult)
+	resp, err := s.client.Do(req, &assessmentHistoryResult)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return assessmentHistoryResult, resp, err
+}
+
+// DeleteAssessmentResult
+func (s *AssessmentHistoriesServiceOp) DeleteAssessmentResult(assessmentID string) (*http.Response, error) {
+	path := fmt.Sprintf("%s?historyId=%s", assessmentHistoriesBasePath, assessmentID)
+
+	req, err := s.client.NewRequest(http.MethodDelete, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	// Delete returns a 204 No Content.
+	// Error on anything else.
+	if resp.StatusCode != 204 {
+		return resp, fmt.Errorf("Expected Status Code 204. Got: %v", resp.StatusCode)
+	}
+
+	return resp, err
 }

@@ -20,7 +20,7 @@ type AssessmentsServiceOp struct {
 	client *Client
 }
 
-var _  AssessmentsService = &AssessmentsServiceOp{}
+var _ AssessmentsService = &AssessmentsServiceOp{}
 
 // AssessmentBundleRequest
 type AssessmentBundleRequest struct {

@@ -336,7 +336,8 @@ func TestAssessments_RunBundle(t *testing.T) {
 				Name:       "string",
 				ID:         "string",
 				ExternalID: "string"}},
-		TestEntities: map[string]interface{}{"sqldb": []interface{}{map[string]interface{}{}},
+		TestEntities: map[string]interface{}{
+			"sqldb":                   []interface{}{map[string]interface{}{}},
 			"applicationGateway":      []interface{}{map[string]interface{}{}},
 			"iamPolicy":               []interface{}{map[string]interface{}{}},
 			"volume":                  []interface{}{map[string]interface{}{}},

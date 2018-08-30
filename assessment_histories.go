@@ -15,7 +15,7 @@ const assessmentHistoriesBasePath = "v2/AssessmentHistoryV2"
 // retrieve the specific assessment results.
 // See: https://api-v2-docs.dome9.com/#Dome9-API-AssessmentHistoryV2
 type AssessmentHistoriesService interface {
-	GetBundleResults(context.Context, string, string, string, string, string) (*AssessmentHistoryResult, *http.Response, error)
+	GetBundleResults(context.Context, string, string, string, string, string) ([]AssessmentHistoryResult, *http.Response, error)
 	GetAssessmentResult(context.Context, string) (*AssessmentHistoryResult, *http.Response, error)
 	DeleteAssessmentResult(context.Context, string) (*http.Response, error)
 }
@@ -68,24 +68,24 @@ type AssessmentHistoryBundleResult struct {
 	RequestID              string               `json:"requestId"`
 }
 
-// GetBundleResults
-func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) (*AssessmentHistoryResult, *http.Response, error) {
-	path := fmt.Sprintf("%s?bundleId=%s&cloudAccountIds=%s&fromTime=%s&epsilonInMinutes=%s&requestId=%s", assessmentHistoriesBasePath, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID)
+type AssessmentHistoryResultsRoot []AssessmentHistoryResult
 
-	fmt.Println(path)
+// GetBundleResults
+func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) ([]AssessmentHistoryResult, *http.Response, error) {
+	path := fmt.Sprintf("%s?bundleId=%s&cloudAccountIds=%s&fromTime=%s&epsilonInMinutes=%s&requestId=%s", assessmentHistoriesBasePath, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	assessmentHistoryResult := new(AssessmentHistoryResult)
-	resp, err := s.client.Do(ctx, req, &assessmentHistoryResult)
+	assessmentHistories := new(AssessmentHistoryResultsRoot)
+	resp, err := s.client.Do(ctx, req, &assessmentHistories)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return assessmentHistoryResult, resp, err
+	return *assessmentHistories, resp, err
 }
 
 // GetAssessmentResult

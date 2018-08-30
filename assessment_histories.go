@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -14,9 +15,9 @@ const assessmentHistoriesBasePath = "v2/AssessmentHistoryV2"
 // retrieve the specific assessment results.
 // See: https://api-v2-docs.dome9.com/#Dome9-API-AssessmentHistoryV2
 type AssessmentHistoriesService interface {
-	GetBundleResults(bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) (*AssessmentHistoryResult, *http.Response, error)
-	GetAssessmentResult(assessmentID string) (*AssessmentHistoryResult, *http.Response, error)
-	DeleteAssessmentResult(assessmentID string) (*http.Response, error)
+	GetBundleResults(context.Context, string, string, string, string, string) (*AssessmentHistoryResult, *http.Response, error)
+	GetAssessmentResult(context.Context, string) (*AssessmentHistoryResult, *http.Response, error)
+	DeleteAssessmentResult(context.Context, string) (*http.Response, error)
 }
 
 // AssessmentHistoriesServiceOp handles communication with the AssessmentHistories
@@ -68,18 +69,18 @@ type AssessmentHistoryBundleResult struct {
 }
 
 // GetBundleResults
-func (s *AssessmentHistoriesServiceOp) GetBundleResults(bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) (*AssessmentHistoryResult, *http.Response, error) {
+func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) (*AssessmentHistoryResult, *http.Response, error) {
 	path := fmt.Sprintf("%s?bundleId=%s&cloudAccountIds=%s&fromTime=%s&epsilonInMinutes=%s&requestId=%s", assessmentHistoriesBasePath, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID)
 
 	fmt.Println(path)
 
-	req, err := s.client.NewRequest(http.MethodGet, path, nil)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	assessmentHistoryResult := new(AssessmentHistoryResult)
-	resp, err := s.client.Do(req, &assessmentHistoryResult)
+	resp, err := s.client.Do(ctx, req, &assessmentHistoryResult)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -88,16 +89,16 @@ func (s *AssessmentHistoriesServiceOp) GetBundleResults(bundleID, cloudAccountID
 }
 
 // GetAssessmentResult
-func (s *AssessmentHistoriesServiceOp) GetAssessmentResult(assessmentID string) (*AssessmentHistoryResult, *http.Response, error) {
+func (s *AssessmentHistoriesServiceOp) GetAssessmentResult(ctx context.Context, assessmentID string) (*AssessmentHistoryResult, *http.Response, error) {
 	path := fmt.Sprintf("%s/%s", assessmentHistoriesBasePath, assessmentID)
 
-	req, err := s.client.NewRequest(http.MethodGet, path, nil)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	assessmentHistoryResult := new(AssessmentHistoryResult)
-	resp, err := s.client.Do(req, &assessmentHistoryResult)
+	resp, err := s.client.Do(ctx, req, &assessmentHistoryResult)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -106,15 +107,15 @@ func (s *AssessmentHistoriesServiceOp) GetAssessmentResult(assessmentID string) 
 }
 
 // DeleteAssessmentResult
-func (s *AssessmentHistoriesServiceOp) DeleteAssessmentResult(assessmentID string) (*http.Response, error) {
+func (s *AssessmentHistoriesServiceOp) DeleteAssessmentResult(ctx context.Context, assessmentID string) (*http.Response, error) {
 	path := fmt.Sprintf("%s?historyId=%s", assessmentHistoriesBasePath, assessmentID)
 
-	req, err := s.client.NewRequest(http.MethodDelete, path, nil)
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := s.client.Do(req, nil)
+	resp, err := s.client.Do(ctx, req, nil)
 	if err != nil {
 		return resp, err
 	}

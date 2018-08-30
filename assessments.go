@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -11,7 +12,7 @@ const assessmentsBasePath = "v2/assessment"
 // accounts, and view the results.
 // See: https://api-v2-docs.dome9.com/#Dome9-API-Assessment
 type AssessmentsService interface {
-	RunBundle(*AssessmentBundleRequest) (*AssessmentResult, *http.Response, error)
+	RunBundle(context.Context, *AssessmentBundleRequest) (*AssessmentResult, *http.Response, error)
 }
 
 // AssessmentsServiceOp handles communication with the Assessments
@@ -130,16 +131,16 @@ type LocationConventionMetadata struct {
 }
 
 // RunBundle runs an assessment on a cloud environment using a bundle.
-func (s *AssessmentsServiceOp) RunBundle(bundleRequest *AssessmentBundleRequest) (*AssessmentResult, *http.Response, error) {
+func (s *AssessmentsServiceOp) RunBundle(ctx context.Context, bundleRequest *AssessmentBundleRequest) (*AssessmentResult, *http.Response, error) {
 	path := fmt.Sprintf("%s/bundleV2", assessmentsBasePath)
 
-	req, err := s.client.NewRequest(http.MethodPost, path, bundleRequest)
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, bundleRequest)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	result := new(AssessmentResult)
-	resp, err := s.client.Do(req, result)
+	resp, err := s.client.Do(ctx, req, result)
 	if err != nil {
 		return nil, resp, err
 	}

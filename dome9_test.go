@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -16,7 +17,9 @@ var (
 
 	client *Client
 
-	creds *Credentials
+	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
+
+	ctx = context.TODO()
 
 	server *httptest.Server
 )
@@ -25,7 +28,6 @@ func setup() {
 	mux = http.NewServeMux()
 	server = httptest.NewServer(mux)
 
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	client, _ = NewClient(nil, creds)
 	url, _ := url.Parse(server.URL)
 	client.BaseURL = url
@@ -70,13 +72,11 @@ func testClientDefaults(t *testing.T, c *Client) {
 }
 
 func TestNewClient(t *testing.T) {
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, _ := NewClient(nil, creds)
 	testClientDefaults(t, c)
 }
 
 func TestNew(t *testing.T) {
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds)
 
 	if err != nil {
@@ -94,22 +94,20 @@ func TestNewClientWithoutCredentials(t *testing.T) {
 }
 
 func TestNewRequest_badURL(t *testing.T) {
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
-	c, _ := NewClient(nil, creds)
-	_, err := c.NewRequest(http.MethodGet, ":", nil)
+	c, _ := New(nil, creds)
+	_, err := c.NewRequest(ctx, http.MethodGet, ":", nil)
 	testURLParseError(t, err)
 }
 
 func TestNewRequest_withCustomUserAgent(t *testing.T) {
 	ua := "testing/0.0.1"
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetUserAgent(ua))
 
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	req, _ := c.NewRequest(http.MethodGet, "/foo", nil)
+	req, _ := c.NewRequest(ctx, http.MethodGet, "/foo", nil)
 
 	expected := fmt.Sprintf("%s %s", ua, userAgent)
 	if got := req.Header.Get("User-Agent"); got != expected {
@@ -132,9 +130,9 @@ func TestDo(t *testing.T) {
 		fmt.Fprint(w, `{"A":"a"}`)
 	})
 
-	req, _ := client.NewRequest(http.MethodGet, "/", nil)
+	req, _ := client.NewRequest(ctx, http.MethodGet, "/", nil)
 	body := new(foo)
-	_, err := client.Do(req, body)
+	_, err := client.Do(ctx, req, body)
 	if err != nil {
 		t.Fatalf("Do(): %v", err)
 	}
@@ -153,8 +151,8 @@ func TestDo_httpError(t *testing.T) {
 		http.Error(w, "Bad Request", 400)
 	})
 
-	req, _ := client.NewRequest(http.MethodGet, "/", nil)
-	_, err := client.Do(req, nil)
+	req, _ := client.NewRequest(ctx, http.MethodGet, "/", nil)
+	_, err := client.Do(ctx, req, nil)
 
 	if err == nil {
 		t.Error("Expected HTTP 400 error.")
@@ -171,8 +169,8 @@ func TestDo_redirectLoop(t *testing.T) {
 		http.Redirect(w, r, "/", http.StatusFound)
 	})
 
-	req, _ := client.NewRequest(http.MethodGet, "/", nil)
-	_, err := client.Do(req, nil)
+	req, _ := client.NewRequest(ctx, http.MethodGet, "/", nil)
+	_, err := client.Do(ctx, req, nil)
 
 	if err == nil {
 		t.Error("Expected error to be returned.")
@@ -213,7 +211,6 @@ func TestCheckResponse_noBody(t *testing.T) {
 
 func TestCustomUserAgent(t *testing.T) {
 	ua := "testing/0.0.1"
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetUserAgent(ua))
 
 	if err != nil {
@@ -228,7 +225,6 @@ func TestCustomUserAgent(t *testing.T) {
 
 func TestCustomBaseURL(t *testing.T) {
 	baseURL := "http://localhost/foo"
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	c, err := New(nil, creds, SetBaseURL(baseURL))
 
 	if err != nil {
@@ -243,7 +239,6 @@ func TestCustomBaseURL(t *testing.T) {
 
 func TestCustomBaseURL_badURL(t *testing.T) {
 	baseURL := ":"
-	creds = &Credentials{KeyID: "foo", KeySecret: "bar"}
 	_, err := New(nil, creds, SetBaseURL(baseURL))
 
 	testURLParseError(t, err)

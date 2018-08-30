@@ -32,7 +32,7 @@ func TestAzureCloudAccounts_ListAzureCloudAccounts(t *testing.T) {
 ]`)
 	})
 
-	azureAccounts, _, err := client.AzureCloudAccounts.List()
+	azureAccounts, _, err := client.AzureCloudAccounts.List(ctx)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.List returned error: %v", err)
 	}
@@ -53,7 +53,7 @@ func TestAzureCloudAccounts_DeleteAzureCloudAccount(t *testing.T) {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	_, err := client.AzureCloudAccounts.Delete(testAccountID)
+	_, err := client.AzureCloudAccounts.Delete(ctx, testAccountID)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.Delete returned error: %v", err)
 	}
@@ -71,7 +71,7 @@ func TestAzureCloudAccounts_CreateAzureCloudAccount(t *testing.T) {
 
 	azureAccount := AzureCloudAccount{ID: "00000000-0000-0000-0000-000000000000", Name: "string", SubscriptionID: "string", TenantID: "string", Credentials: &AzureAccountCredentials{ClientID: "string", ClientPassword: "string"}, OperationMode: "Read", Error: "string", CreationDate: "2018-08-26T16:11:12Z"}
 
-	_, err := client.AzureCloudAccounts.Create(azureAccount)
+	_, err := client.AzureCloudAccounts.Create(ctx, azureAccount)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.Create returned error: %v", err)
 	}
@@ -99,7 +99,7 @@ func TestAzureCloudAccounts_GetAzureCloudAccountsMissingPermissions(t *testing.T
 }`)
 	})
 
-	missingPerms, _, err := client.AzureCloudAccounts.GetMissingPermissions("00000000-0000-0000-0000-000000000000")
+	missingPerms, _, err := client.AzureCloudAccounts.GetMissingPermissions(ctx, "00000000-0000-0000-0000-000000000000")
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.GetMissingPermissions returned error: %v", err)
 	}
@@ -140,7 +140,7 @@ func TestAzureCloudAccounts_GetAzureCloudAccountsMissingPermissionsByEntityType(
 ]`)
 	})
 
-	missingPerms, _, err := client.AzureCloudAccounts.GetMissingPermissionsByEntityType("00000000-0000-0000-0000-000000000000", "entType", "subType")
+	missingPerms, _, err := client.AzureCloudAccounts.GetMissingPermissionsByEntityType(ctx, "00000000-0000-0000-0000-000000000000", "entType", "subType")
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.GetMissingPermissionsByEntityType returned error: %v", err)
 	}
@@ -161,7 +161,7 @@ func TestAzureCloudAccounts_ResetMissingPermissions(t *testing.T) {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	_, err := client.AzureCloudAccounts.ResetMissingPermissions(testAccountID)
+	_, err := client.AzureCloudAccounts.ResetMissingPermissions(ctx, testAccountID)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.ResetMissingPermissions returned error: %v", err)
 	}
@@ -189,7 +189,7 @@ func TestAzureCloudAccounts_UpdateOperationMode(t *testing.T) {
 	})
 
 	opMode := AzureAccountOperationMode{OperationMode: "Read"}
-	azureAccount, _, err := client.AzureCloudAccounts.UpdateOperationMode(testAccountID, opMode)
+	azureAccount, _, err := client.AzureCloudAccounts.UpdateOperationMode(ctx, testAccountID, opMode)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}
@@ -223,7 +223,7 @@ func TestAzureCloudAccounts_UpdateAccountName(t *testing.T) {
 	})
 
 	acctName := AzureAccountNameMode{Name: "foobared"}
-	azureAccount, _, err := client.AzureCloudAccounts.UpdateAccountName(testAccountID, acctName)
+	azureAccount, _, err := client.AzureCloudAccounts.UpdateAccountName(ctx, testAccountID, acctName)
 	if err != nil {
 		t.Errorf("AzureCloudAccounts.UpdateOperationMode returned error: %v", err)
 	}

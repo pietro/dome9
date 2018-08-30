@@ -282,7 +282,7 @@ func TestAssessments_RunBundle(t *testing.T) {
 		CloudAccountType:       "Aws",
 		RequestID:              "00000000-0000-0000-0000-000000000000"}
 
-	assessmentResult, _, err := client.Assessments.RunBundle(bundle)
+	assessmentResult, _, err := client.Assessments.RunBundle(ctx, bundle)
 	if err != nil {
 		t.Errorf("Assessments.RunBundle returned error: %v", err)
 	}

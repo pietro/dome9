@@ -68,8 +68,6 @@ type AssessmentHistoryBundleResult struct {
 	RequestID              string               `json:"requestId"`
 }
 
-type AssessmentHistoryResultsRoot []AssessmentHistoryResult
-
 // GetBundleResults
 func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID string) ([]AssessmentHistoryResult, *http.Response, error) {
 	path := fmt.Sprintf("%s?bundleId=%s&cloudAccountIds=%s&fromTime=%s&epsilonInMinutes=%s&requestId=%s", assessmentHistoriesBasePath, bundleID, cloudAccountIDs, fromTime, epsilonInMinutes, requestID)
@@ -79,13 +77,13 @@ func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bun
 		return nil, nil, err
 	}
 
-	assessmentHistories := new(AssessmentHistoryResultsRoot)
+	var assessmentHistories  []AssessmentHistoryResult
 	resp, err := s.client.Do(ctx, req, &assessmentHistories)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return *assessmentHistories, resp, err
+	return assessmentHistories, resp, err
 }
 
 // GetAssessmentResult

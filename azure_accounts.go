@@ -58,10 +58,6 @@ type AzureAccountNameMode struct {
 	Name string `json:"name"`
 }
 
-type azureCloudAccountsRoot []AzureCloudAccount
-
-type missingPermissionRoot []MissingPermission
-
 // List all AzureCloudAccounts.
 func (s *AzureCloudAccountsServiceOp) List(ctx context.Context) ([]AzureCloudAccount, *http.Response, error) {
 	path := azureCloudAccountBasePath
@@ -71,13 +67,13 @@ func (s *AzureCloudAccountsServiceOp) List(ctx context.Context) ([]AzureCloudAcc
 		return nil, nil, err
 	}
 
-	azureAccounts := new(azureCloudAccountsRoot)
+	var azureAccounts []AzureCloudAccount
 	resp, err := s.client.Do(ctx, req, &azureAccounts)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return *azureAccounts, resp, err
+	return azureAccounts, resp, err
 }
 
 // Delete an Azure account from a Dome9 account (the Azure account is not deleted from Azure).
@@ -153,13 +149,13 @@ func (s *AzureCloudAccountsServiceOp) GetMissingPermissionsByEntityType(ctx cont
 		return nil, nil, err
 	}
 
-	missingPerms := new(missingPermissionRoot)
+	var missingPerms []MissingPermission
 	resp, err := s.client.Do(ctx, req, &missingPerms)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return *missingPerms, resp, err
+	return missingPerms, resp, err
 }
 
 // ResetMissingPermissions resets (re-validate) the missing permissions indication for an Azure account in Dome9.

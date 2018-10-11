@@ -44,6 +44,7 @@ type Client struct {
 	AzureCloudAccounts  AzureCloudAccountsService
 	Assessments         AssessmentsService
 	AssessmentHistories AssessmentHistoriesService
+	AccountTrusts       AccountTrustsService
 }
 
 // NewClient returns a new Dome9 API client.
@@ -65,6 +66,7 @@ func NewClient(httpClient *http.Client, credentials *Credentials) (*Client, erro
 	c.AzureCloudAccounts = &AzureCloudAccountsServiceOp{client: c}
 	c.Assessments = &AssessmentsServiceOp{client: c}
 	c.AssessmentHistories = &AssessmentHistoriesServiceOp{client: c}
+	c.AccountTrusts = &AccountTrustsServiceOp{client: c}
 
 	return c, nil
 }

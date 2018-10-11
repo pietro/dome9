@@ -77,7 +77,7 @@ func (s *AssessmentHistoriesServiceOp) GetBundleResults(ctx context.Context, bun
 		return nil, nil, err
 	}
 
-	var assessmentHistories  []AssessmentHistoryResult
+	var assessmentHistories []AssessmentHistoryResult
 	resp, err := s.client.Do(ctx, req, &assessmentHistories)
 	if err != nil {
 		return nil, resp, err
